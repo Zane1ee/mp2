@@ -1,0 +1,937 @@
+MP2 STANDARD OPERATING PROCEDURE (SOP)
+=======================================
+Project: CS409 MP2 - Front-end App
+Repo root: /Users/a16594/Desktop/uiuc FA26/cs 409/mp2/
+Draft date: 2026-10-05 (America/Chicago)
+Due: Tuesday, 2026-10-06, 11:59 PM CT（按当前 README）
+Status: ROUND 5 RELEASE IN PROGRESS (2026-10-06)。
+        D1-D7 已批准；第 1-4 轮用户手动验收通过，功能开发结束。
+        STEP 21/22 提交与真实 Pages 验收正在执行；仓库公开、现有推送权限、
+        Pages Source=GitHub Actions / HTTPS 已经 GitHub API 实际确认。
+        STEP 23/24 的视频、个人信息、survey 和表单由所有者按提交清单操作。
+        当前记录见 ROUND5_ACCEPTANCE.md；提交清单见 SUBMISSION_CHECKLIST.md。
+
+SOURCE-OF-TRUTH ORDER
+---------------------
+1. 当前 mp2/README.md 是项目预期、功能、评分、规则和提交要求的最高基准。
+   SOP、旧项目经验、示例、第三方教程与它冲突时，先修订 SOP。
+2. mp2/.github/workflows/deploy.yml 是当前部署机制的事实依据；如与 README
+   有冲突，记录冲突并按 README 处理，不凭旧项目经验改写它。
+3. mp1/SOP.txt 提供组织方式：工作量评估、分步 Actions / Verify、开发前
+   确认关口、实施、验收、部署与提交、LLM 专项、初稿复审、Done Criteria。
+4. mp1 的相关聊天记录与 SOURCES.md 提供经验背景。按所有者要求，假设
+   mp1 已顺利完成；不把旧 SOP 中残留的未勾选事项当成 mp2 的前置任务。
+5. 当前官方工具/API 文档只用于确认可行性。README 的旧视频是示例，
+   不构成必须仿制的配色、页面布局或数据集要求。
+
+标记约定：
+  REQUIRED = README 明确要求；RECOMMENDED = 本 SOP 建议；
+  OWNER DECISION = 需要所有者拍板；PENDING = 尚未执行/验证。
+  D1-D7 已全部批准采用推荐值。保留备选说明供后续变更参考，不代表多套并行方案。
+
+------------------------------------------------
+0. WORKLOAD & DIFFICULTY ESTIMATE
+------------------------------------------------
+- 难度：MEDIUM-HIGH。比 mp1 增加了类型模型、远程数据、异步状态、三个路由
+  页面、筛选结果与详情导航之间的一致性，以及静态部署下的深链接处理。
+- 推荐范围下的工程量估计（不是课程要求或承诺）：
+    - 约 3 个页面、6-10 个共享组件、API/类型/目录状态/选择器模块。
+    - 业务 TS/TSX 约 800-1,300 行；CSS 约 250-450 行；配置和校验少量。
+    - 已熟悉 React：约 8-14 个专注小时；熟悉前端的学生：12-22 小时；
+      初次使用 React：20 小时以上。外部配置、录屏和提交另留 1-2 小时。
+- 100 分的优先级：List 28；Gallery 12；Details 38；工具 12；Design 10。
+  两个入口各 10 分，Previous/Next 10 分，不能等到最后再连接详情页。
+- 时间策略：当前 README 截止日为次日 10 月 6 日。先完成一个真实 API 对象
+  的“列表/图库 → 详情 → URL 刷新 → 部署”闭环，再扩展目录和设计。
+  不为账号、收藏、登录、进化树、无限滚动或复杂动画扩大第一版范围。
+- 主要风险：API 请求扇出、乱序响应、缺字段/缺图、排序原地修改数组、
+  过滤范围误导、详情顺序丢失、Pages 路径 404、Node/依赖版本不匹配。
+
+------------------------------------------------
+STEP 1: FREEZE THE ASSIGNMENT SCOPE AND RULES
+------------------------------------------------
+Actions:
+  - REQUIRED：一个使用 React 的 single-page app，消费选定 API 数据。
+  - 将以下评分项逐项映射到实现和演示动作，不用“功能看起来类似”替代：
+      L1 API 相关列表内容                      4
+      L2 搜索过滤                            8
+      L3 至少两个不同属性排序                  8
+      L4 每个排序属性都支持升序、降序          8
+      G1 图库由对象媒体组成                    4
+      G2 点击属性筛选器改变结果                8
+      D1 点击列表项进入详情                   10
+      D2 点击图库项进入详情                   10
+      D3 显示对象属性                          8
+      D4 Previous / Next 正确工作             10
+      O1 React Router + TypeScript            12
+      O2 Design                              10
+      总计                                  100
+  - REQUIRED（即使没有独立评分行）：搜索必须 as-you-type；详情必须有特定
+    route，并能通过特定 URL 直接访问；API 请求必须使用 Axios。
+  - REQUIRED：个人作业；不复制粘贴非本人代码；声明全部参考代码/阅读来源；
+    不使用 inline styling、inline script tags 或 HTML table 布局。
+    不确定的课程规则通过 Piazza 向教师确认。
+  - REQUIRED：不使用付费 API。API 暂时不可用时允许 mock；缓存可应对限流。
+  - 区分推荐与硬约束：README 强烈推荐 Vite，推荐 Normalize.css、CSS
+    Modules，允许 React 组件库。第一版采用 Vite + CSS Modules，使用原生
+    控件降低隐式内联样式风险；不把“允许组件库”误写成“必须组件库”。
+  - 不沿用 mp1 的禁止库、SCSS、轮播/模态框、视频、社交图标、五个指定
+    分辨率要求。mp2 没有规定最少数据条数、详情字段数、分页、首尾循环、
+    多选 AND/OR、固定配色或必须复刻示例；这些都是设计选择。
+
+Verify:
+  - 上述 12 个评分项总计 100；Axios、实时搜索与直接 URL 没有漏掉。
+  - 同一属性的升降序不算“两个属性”；筛选结果不冒充排序功能。
+  - 全部 RECOMMENDED / OWNER DECISION 与 REQUIRED 明确区分。
+
+------------------------------------------------
+STEP 2: CONFIRM THE CURRENT EMPTY-PROJECT BASELINE
+------------------------------------------------
+Actions:
+  - 使用已有 mp2 仓库，不重复 Git 安装、SSH、账户、clone 等基础流程。
+  - 2026-10-05 初始化前的只读基线记录：
+      - 仓库仅有 README.md 和 .github/workflows/deploy.yml（及 .git）。
+      - 尚无 package.json、package-lock.json、src/ 或 Vite 配置。
+      - origin 是 https://github.com/Zane1ee/mp2.git；初始工作区干净。
+      - 本地 Node v24.20.0、npm 11.19.0。
+      - 工作流在 main push / workflow_dispatch 时运行，使用 Node 20、
+        npm ci、npm run build，上传 ./dist，随后部署 GitHub Pages。
+      - 原规划轮未运行 create-vite、npm install、build 或开发服务器；第 1 轮现已执行。
+  - 官方 Vite 文档当前给出的 Node 下限为 20.19+ 或 22.12+；模板可能有
+    更高要求。下一轮以实际生成依赖的 engines 为准，并核对 Node 20 CI。
+  - mp1 曾发生构建成功、Pages deploy 404 的问题：mp2 的 Pages Source
+    是新仓库级设置，必须单独确认，不能因 mp1 已完成就假设 mp2 也已启用。
+  - 原规划轮不初始化；第 1 轮已按 STEP 11/12 完成运行基线验证，再实现最小闭环。
+
+Verify:
+  - 明确区分工具存在与运行验证：第 1 轮安装/构建已通过，实际线上 Pages 仍 PENDING。
+  - 不把 mp1 的 npm start、Webpack、build/ 或旧 lockfile 复制进 mp2。
+
+------------------------------------------------
+STEP 3: LOCK THE PLANNED CODE/BUILD ARCHITECTURE
+------------------------------------------------
+Actions:
+  - 推荐采用 Vite react-ts 模板与 React Router declarative routing；
+    不增加后端、数据库或服务端渲染。版本在下一轮安装时核对并锁定。
+  - 计划的职责分工（初始化后按实际模板微调，不整批照搬外部源码）：
+      index.html                  Vite 外部 module 脚本入口
+      src/main.tsx                React 挂载、全局 CSS、BrowserRouter
+      src/App.tsx                 共享布局与 Routes
+      src/pages/ListView.tsx      搜索/排序/列表
+      src/pages/GalleryView.tsx   媒体网格/类型筛选
+      src/pages/DetailView.tsx    URL ID、对象详情、前后导航
+      src/components/            导航、列表行、卡片、状态提示等
+      src/api/client.ts          Axios 实例、timeout、取消、错误归一化
+      src/api/pokemon.ts         列表/详情请求、响应验证与归一化
+      src/types/                 API 最小响应类型与内部对象类型
+      src/state/                 共享目录、按 ID 缓存、进行中的请求
+      src/utils/                 纯搜索/排序/过滤、URL 状态编解码
+      src/**/*.module.css        页面/组件样式
+      src/styles/global.css      reset、tokens、字体、全局焦点
+      scripts/                   原创构建后路由入口生成脚本（D6）
+      public/data/               明确标注的 API 样例（需要时、D7）
+      SOURCES.md / llm_logs.csv   来源和实际日志索引（文件名是推荐约定）
+  - 全应用共享一个目录数据源。页面不各自重复下载整个目录；组件不直接
+    散落 Axios 配置；不为这份有限数据引入 Redux 等额外状态框架。
+  - 展示状态保留在 URL query；加载数据保留在共享状态。派生结果通过纯
+    函数计算，不分别维护会逐渐失同步的 filteredItems / sortedItems。
+  - 保持 Vite 外部脚本引用；禁止添加含执行内容的 inline script。
+    JSX onChange/onClick 是 React 正常事件处理，不等同于 inline script tag。
+
+Verify:
+  - 路由、API、业务选择器、展示职责清晰，List/Gallery/Detail 复用同一 ID。
+  - ts/tsx 覆盖业务代码；不能以到处 any 或类型断言代替处理未知响应。
+
+------------------------------------------------
+STEP 4: MAP REQUIREMENTS TO THE THREE VIEWS
+------------------------------------------------
+Actions:
+  A. LIST VIEW（信息检索页；28 分）
+    - 构成：页面标题/范围说明、带 label 的搜索框、排序属性选择器、独立
+      Ascending / Descending 控件、结果数量、语义列表、加载/空/错误状态。
+    - 推荐每行显示：名称、编号、小图、已加载时的类型；整条主链接去详情。
+    - 两个排序属性：Name（文本）与 Number / ID（数值）。两者均支持
+      A→Z / Z→A 或小→大 / 大→小；名称并列时用 ID 稳定决胜。
+    - 输入变化立即过滤名称，大小写不敏感、忽略首尾空格；清空恢复完整
+      的已批准目录。无需回车、提交按钮或每个按键一次 API 请求。
+    - 排序作用于全部匹配对象，不只作用于当前可见的一小块。
+
+  B. GALLERY VIEW（以图像为主的浏览页；12 分）
+    - 构成：标题/范围说明、类型多选、Clear filters、结果数量、图片网格、
+      卡片名称/编号/类型、加载/空/错误状态。
+    - 图片来自所选 API 的响应媒体字段；不能以装饰背景或自制卡通图
+      代替评分要求的 item media。缺图可显示可访问的占位提示。
+    - 推荐 Pokemon types 多选；选择 fire / water 等实际存在的属性会
+      改变网格内容。空选择代表 All；多选 OR 逻辑见 STEP 7 / D5。
+    - 卡片链接进入与 List 共用的详情 route，而不是另做图库专属详情。
+
+  C. DETAIL VIEW（可分享的对象页；38 分）
+    - 构成：返回来源视图链接、名称/编号、大图、类型、身高/体重、能力
+      名称、基础 stats、Previous / Next、当前集合内位置及错误状态。
+    - 本 SOP 建议这些属性；README 只要求不同 item details，未规定字段数。
+    - route 推荐 /pokemon/:id；URL 里的稳定 ID 是主身份，不能依赖刚才
+      点击的卡片对象、数组下标或临时 location.state 才能渲染。
+    - Previous/Next 使用进入详情时那份过滤且排序后的集合；直接 URL
+      访问使用默认目录顺序。具体边界语义见 STEP 7 / D5。
+
+Verify:
+  - 三个 view 是同一 React SPA 的三个页面，不是一个页面上三个假标签。
+  - 实时搜索、图库属性过滤、两个入口、完整详情、前后导航各有独立验收。
+  - 详情不是只有图片/标题的模态框，且地址栏确实出现对象专属 URL。
+
+------------------------------------------------
+STEP 5: OWNER DECISIONS — PERSONALIZED DESIGN GATE
+------------------------------------------------
+Actions:
+  - 所有者已于 2026-10-05 批准 D1-D7 全部采用推荐方案；以下推荐值现为执行基准：
+
+  D1. API / 内容主题（APPROVED 2026-10-05）
+      推荐 PokéAPI：无需账号/API key；名字、编号、types、sprites 与详情
+      能覆盖 rubric。代价是列表只给名称/URL，类型和图片需详情请求。
+      备选 Art Institute of Chicago：艺术展览主题；官方文档说明免认证、
+      匿名每分钟 60 请求。仍需重新确认排序字段、分类过滤、图像缺失、
+      字段单位与有限目录选择；选用媒体时核对 public-domain 标记/来源。
+      若选择 TMDB 等其他 API，先核对免费使用、浏览器访问、key 获取和
+      可公开凭据条件，再改完 SOP；不要给未知 API 套 Pokemon 字段。
+
+  D2. 名称、语言与文案（APPROVED 2026-10-05）
+      推荐标题 "Pokémon Explorer"，面向课程演示使用英文界面，API 名称
+      保留原文；页脚简短注明 CS409 MP2 / 数据来源。无需个人简介或社交链接。
+      可改中文/双语或别的标题；不要默认继承 mp1 个人作品集内容。
+
+  D3. 视觉方向（APPROVED 2026-10-05）
+      推荐延续 mp1 的浅蓝、深蓝、白色与系统字体，列表信息清晰，图库以
+      图片为主，详情突出主体；类型用文字与有限 CSS class 颜色辅助识别。
+      不添加大背景、视频、远程字体或复杂动画。可另选复古图鉴等方向。
+
+  D4. 数据范围与首版功能边界（APPROVED 2026-10-05）
+      推荐 ID 1-60 的有限目录，页面明确标注 "Pokémon #001–#060"，
+      搜索/图库都基于同一 60 项；全部显示，暂不分页、不无限加载。
+      名称 + 编号双属性排序；类型过滤；详情采用 STEP 4 的字段。
+      可改 1-151，但须接受更多请求/加载时间并复核缓存和加载体验。
+      60 是规模选择，不是 README 规定；不声称这是全量 Pokemon 搜索。
+
+  D5. 筛选与详情导航语义（APPROVED 2026-10-05）
+      推荐类型多选 OR（任一选中类型命中就保留）；空选择=全部。
+      前后导航跟随来源集合的当前筛选/排序，首尾循环；仅一项时两端禁用。
+      返回链接保留查询条件；无来源 URL 时在默认目录按 ID 顺序浏览。
+      可改 AND 或首尾禁用；批准后统一文案、实现和测试，不混用两套语义。
+
+  D6. URL 与 GitHub Pages 深链接方案（APPROVED 2026-10-05）
+      推荐 BrowserRouter + basename=/mp2/，在构建后给 /list/、/gallery/
+      和每个批准 ID 的 /pokemon/<id>/ 生成同一 app 的静态入口文件。
+      它们复用同一编译 JS/CSS，不是分别开发多套页面；运行时仍是 SPA。
+      这是本 SOP 的部署设计，已在本地普通静态服务验证；实际 Pages 待第 5 轮。
+      不直接改为 HashRouter，也不粘贴含 inline script 的 SPA 重定向方案。
+      若希望 hash URL，需先通过 Piazza 确认与 README 的 BrowserRouter/
+      basename 提交说明相容，再更新此项。
+
+  D7. 网络异常与样例模式（APPROVED 2026-10-05）
+      推荐真实 API 为默认；共享缓存、清楚的加载/错误提示、重试与缺图处理。
+      准备有限、来源明确的 API JSON 样例用于异常验证；API 真正不可用时
+      可显式切到标注条数和来源的 Sample mode，不能悄悄伪装成实时数据。
+      样例图若只用远程链接，不能保证断网图库；需要完整离线演示时，再
+      准备有来源的本地 API 媒体并检查 base 路径。该增强不是课程硬要求。
+
+Verify:
+  - D1-D7 的批准值落入本文件；批准 mp1 不等于批准这些 mp2 决定。
+  - 如果变更 API、数据范围或 URL 方案，先更新 STEP 3/4/6/7/12/22。
+  - 工程细节如文件拆分、稳定排序无需额外逐项请求批准；此关口只冻结
+    所有者明确要求拍板的设计和进入开发阶段的授权。
+
+------------------------------------------------
+STEP 6: PREPARE THE API, ENVIRONMENT AND SOURCE MANIFEST
+------------------------------------------------
+Actions:
+  - 推荐 API 契约（D1/D4 采用推荐值时）：
+      Base URL: https://pokeapi.co/api/v2/
+      Catalog:  GET pokemon?limit=60&offset=0（再检查/限定 ID 1-60）
+      Detail:   GET pokemon/<id>/
+      Required mapping: id, name, types[].type.name, sprites.front_default,
+                        height, weight, abilities[].ability.name, stats[]
+      图片先用实际响应里可用的图像字段，允许 sprites 的嵌套图作为增强；
+      不仅凭猜测拼接第三方图片地址。height / 10 → m，weight / 10 → kg。
+  - 内部对象统一 ID 为 number，姓名/类型为字符串，imageUrl 可为 null；
+    数值缺失显示 "Unavailable"，不补造评分、身高、能力或编号。
+    请求层验证关键字段与 ID，TypeScript 类型本身不验证网络 JSON。
+  - 开发前 API 可用性校验计划：浏览器从 localhost 发出少量实际请求，
+    检查 JSON、CORS、HTTPS 图片、类型样例和缺图处理；线上再做同样检查。
+    第 1 轮真实浏览器请求/图片已通过；实际 GitHub Pages 访问尚未验证。
+  - 请求预算：推荐目录冷启动最多 1 次目录 + 60 次详情（不含图片，
+    不含明确重试）；详情请求最多 4 个并发。不一次 Promise.all 打满 60。
+    详情与图库共用缓存，搜索/排序/过滤不再请求整份目录。
+  - PokéAPI 文档当前说明免认证且无常规限流，同时要求节制并缓存请求。
+    通用错误流程仍处理 429 / 网络失败；不能据此进行无限并发或重试。
+  - 必需环境：Node/npm、可安装依赖的网络、浏览器、已存在的 GitHub 仓库。
+    必需项目工具：React、TypeScript、React Router、Axios、Vite react-ts。
+    推荐 normalize.css + CSS Modules；不需要 Python、Docker、数据库。
+  - MCP：README 未要求任何 MCP。现有浏览器操作能力可用于验收；没有
+    专用浏览器 MCP 时也可手动检查。GitHub API/CLI/连接器用于读部署状态
+    是便利工具，Drive 连接器用于上传是便利工具，均不阻塞本地代码。
+    本轮不安装插件、不连接账户；实际分享、上传或消息另按当时授权执行。
+  - 采用 PokéAPI 时无需 .env/key。换成需要 key 的 API 时，只用免费接口；
+    .env 不提交，.env.example 仅占位，工作流按实际需要设置构建变量。
+    前端 VITE_* 会进入公开构建，GitHub secret 也不能让客户端 key 保密；
+    要求私密服务器凭据的 API 不适合直接塞进这个公开静态站点。
+  - SOURCES.md 记录 API/文档/阅读/组件库/媒体/设计参考：URL、用途、访问
+    日期与必要来源说明。API 返回的数据不是可任意宣称原创的图片素材。
+    llm_logs.csv 沿用 mp1 的索引习惯，但不复制 mp1 的旧链接或占位符。
+
+Verify:
+  - 不需要用户为推荐 API 注册账户、申请 key 或配置付费服务。
+  - 下一轮在写完整业务前，至少一种真实请求和图像在浏览器中通过。
+  - API/key 的准备、可选 MCP、部署设置和功能代码之间的依赖已明确。
+
+------------------------------------------------
+STEP 7: SPECIFY INTERACTION AND STATE BEHAVIOR BEFORE CODING
+------------------------------------------------
+Actions:
+  - List：query 为受控输入；trim + 大小写归一化，名称 substring 匹配；
+    空字符串匹配全部。两种 sortKey 与两种 direction 是合法枚举。
+    数字排序不得按字符串排序；用副本排序，不原地修改共享目录。
+  - Gallery：type 候选来自批准目录的已验证数据；选中列表去重。
+    推荐 selectedTypes 为空时全保留，否则 item.types 中任一类型命中。
+    取消一个选项、清空、多选均应立刻改变结果；顺序默认按 ID 升序。
+  - 加载：名单与 name/ID 就绪后 List 可用；类型/图片数据继续加载。
+    Gallery 属性筛选等类型索引完整后才开放，显示加载进度。某项失败时
+    显示失败数/重试，不把未知类型当成“没有匹配”，也不显示假零结果。
+    进入某个详情时优先取该项缓存或请求，不必等待全部目录下载完。
+  - URL：List / Gallery 的查询条件用 search params 保存，外部输入先校验。
+    List 例：/list/?q=bulb&sort=name&order=asc
+    Gallery 例：/gallery/?type=fire&type=water
+    Detail 例：/pokemon/1/?from=list&q=bulb&sort=name&order=asc
+    路径均为相对 Router base 的路径；线上前面再加 /mp2。
+  - Detail 的 orderedIds：
+      1. from=list：重建相同 query/sort/direction 的全部匹配 ID。
+      2. from=gallery：重建相同 types 的全部匹配 ID，按 ID 升序。
+      3. 无来源：批准目录按 ID 升序；ID 必须从 route 获取。
+    不只用某个显示分块，不用“ID + 1”代替过滤集合中的下一项。
+  - 推荐循环：第一个 Previous 到末项，末项 Next 到首项；一项时禁用
+    两端；空集合没有可点项。若当前 ID 不属于 URL 来源集合，则展示该
+    项并注明改用默认目录顺序，不做 index=-1 运算或静默崩溃。
+    ID 非法/不在批准范围时显示清楚的 Not found / Out of catalog 和返回。
+  - Next/Previous 更新 route ID，同时保留来源条件；刷新可重建；返回
+    来源用明确 Link，不只 navigate(-1)，避免直达 URL 没有返回历史。
+  - API 状态：idle/loading/success/error 分开；未加载不显示“0 results”。
+    快速切 ID 的旧响应不能覆盖新 ID；取消请求不作为用户错误提示。
+    React StrictMode 的开发 effect 重跑通过清理/请求去重处理。
+  - live/sample 若并存，URL 标注模式并隔离缓存及 orderedIds；重试不会
+    把两套数据无声混合。样例范围与实时范围分别明确标注。
+
+Verify:
+  - 两个来源、直接进入、刷新、后退/前进都能得出确定且一致的详情序列。
+  - 单项、空结果、双属性四组合、OR 多选、非法 query/ID 均有明确行为。
+  - 不依赖刷新后丢失的内存导航状态，也不依赖数据下载完成先后决定顺序。
+
+------------------------------------------------
+STEP 8: DEFINE THE SEMANTIC AND RESPONSIVE CONTRACT
+------------------------------------------------
+Actions:
+  - 页面结构：skip link、共享 header/nav、main 内当前 view、来源 footer；
+    每页一个主标题，搜索/排序/过滤有真实 label，详情属性用 dl 或语义区块。
+  - 路由导航用 Link / NavLink；动作使用 button 或 native input/select。
+    列表用 ul/li，网格用 CSS Grid/Flex。不得用 table 排版整个页面。
+  - 不写 style={{...}}、HTML style 属性、动态 element.style 或 styled
+    组件的内联样式。类型颜色、选中态、loading 状态通过 CSS class 表达。
+    stats 使用文字/原生 meter 或 progress，避免计算宽度注入内联样式。
+  - 选中态用 checkbox/aria-pressed 等真实语义；加载/结果数量适当用
+    aria-live；图片有 alt，缺图不无限循环 onError 切回同一坏 URL。
+  - RECOMMENDED QA 尺寸：1440x900、1024x768、768x1024、390x844；
+    另查 320px 窄屏与键盘操作。它们是本 SOP 的设计验收，不是 README
+    指定尺寸。工具栏可换行、网格自适应、详情窄屏上下堆叠。
+  - 键盘可进入两个入口、筛选器、排序器、Previous/Next；焦点可见，
+    颜色不是唯一提示，缩放后文字不裁切，尊重 reduced motion。
+
+Verify:
+  - 所有 view 在小屏上仍能完成评分动作，无横向溢出或控件重叠。
+  - 原生 React 事件正常使用；不误把 mp1 禁止 HTML inline handler 的
+    实现扫描模式直接套在所有 JSX onClick 上。
+
+------------------------------------------------
+STEP 9: DEFINE THE REVIEW, TEST AND RISK PLAN
+------------------------------------------------
+Actions:
+  - 使用以下“风险 → 防护 → 证明”矩阵；避免只看页面截图：
+      API 扇出/重复请求：并发上限、缓存和请求去重；切 view 后查请求数。
+      乱序与卸载：AbortController/当前 ID 校验；慢网中快速连点详情。
+      StrictMode：effect 清理与请求所有权明确；不靠删除 StrictMode 掩盖。
+      部分加载：单项失败不吞掉全局状态；注入失败并检查重试/计数。
+      缺字段/坏图片：nullable/防护/占位；模拟 null 和图片 404。
+      排序污染：纯选择器/数字比较/tie-break；检查切 view 前后原目录不变。
+      过滤逻辑：实际 type 数据、OR/清空定义；比对对象属性与结果。
+      来源丢失：query 持久化；刷新/新标签/后退重建同一顺序。
+      详情边界：集合 index 而非 ID 算术；测首尾、单项、空/非法来源。
+      Pages 深链接：base/basename + 路由入口；线上直接打开和硬刷新。
+      CI 差异：兼容 engines 的 Node、提交 lockfile、npm ci；Actions green。
+      样式约束：DOM 检查生成的 style 属性/inline script；含库也查输出。
+  - rubric 功能矩阵：
+      L1：API 名称/编号与列表一致。
+      L2：逐字输入、删除、清空、大小写/空白、无匹配，均实时变化。
+      L3/L4：Name ASC/DESC 与 ID ASC/DESC 四组合，10/2/9 数字顺序正确。
+      G1/G2：真实 item media；单选、多选、取消、All、无匹配。
+      D1/D2/D3：分别从 List 与 Gallery 进入同一路由，属性属于所选 ID。
+      D4：多次前后、过滤/排序序列、首尾、单项、直达 URL、刷新。
+      O1：源文件和构建验证 TS/Router；API network 验证 Axios。
+      O2：三个 view 风格一致、对比/间距/反馈清楚，推荐尺寸均可操作。
+  - 异常验收：网络超时、429、单项失败、目录失败、错误 ID、图片失败、
+    带特殊字符 query、缓存后切换 view。Mock 故障有明确来源/开关。
+  - 使用少量有价值的测试验证搜索/排序/OR/URL round-trip/导航边界；
+    路由刷新、CORS、请求竞态与 Pages 用实际浏览器验收。不要为了行数
+    给每个无逻辑的展示组件写镜像测试。
+  - 默认执行生成模板的类型检查、lint、build。通过后除新改动/新问题外，
+    不无理由重复扩大测试；测试状态与实际运行记录对应。
+
+Verify:
+  - 每个评分项有可观察的演示动作；每个高风险项有边界或故障证明。
+  - dev server 的 history fallback 成功不能当作 Pages 深链接已通过。
+
+------------------------------------------------
+STEP 10: PRE-DEVELOPMENT APPROVAL GATE — PASSED FOR ROUND 1
+------------------------------------------------
+Actions:
+  - 以下关口针对原规划轮；所有者已于 2026-10-05 授权第 1 轮，现已通过。
+  - 原规划轮交付 SOP、README 复审结论、LLM 专项和 D1-D7 决定清单。
+  - 原规划轮不创建 Vite 模板/安装依赖/写功能/修改 workflow；随后所有者
+    确认方案并明确“开始”后，进入 STEP 11。
+  - 下一轮先配置与少量可用性验证，再开始完整页面实现。未通过的运行
+    条件可与其他工作解耦，但不能把实际失败标成完成。
+
+Verify — A. 本轮规划验收：
+  [x] 已完整阅读 README 并建立 100 分映射
+  [x] 已参考 mp1 SOP 和相关聊天记录，识别可继承经验与不可继承约束
+  [x] 已确认 mp2 空模板和当前 Node/npm/工作流状态
+  [x] 已建立 API、三个 view、路由、异步状态、测试和提交准备方案
+  [x] 初稿完成后的 README 复审完成（见 POST-DRAFT REVIEW）
+  [x] D1-D7 经所有者确认（2026-10-05 全部采用推荐值）
+  [x] 所有者于 2026-10-05 明确授权第 1 轮初始化、实现和测试
+
+Verify — B. 第 1 轮配置后基线（2026-10-05 已验收）：
+  [x] README 与工作流备份/恢复验证完成
+  [x] react-ts 初始化、依赖安装、lockfile、类型/lint/build 基线通过
+  [x] 实际依赖 engines 与本地/CI Node 均兼容
+  [x] 真实 API 与图片在浏览器中可用；或 README 允许的 mock 应急已明确标注
+  [x] base/basename 和一个详情 URL 的部署验证方案已落实
+  [x] 来源/LLM 日志记录方式已建立
+  注：Pages 设置/Drive 分享不阻塞本地功能编码；深链接线上验收和视频
+      仍是最终交付条件。MCP 不在必需关口中。
+
+------------------------------------------------
+EXECUTION BATCHES — SENIOR ENGINEERING REVIEW (2026-10-05)
+------------------------------------------------
+- 建议按 6 个交付阶段管理：规划阶段已完成，后续分 5 个执行批次。
+  每批通常对应一轮工作对话；本轮为开工前答疑，不计作功能开发批次。
+  批次是验收节点，不是每次必须重新批准 D1-D7 的关口。
+- “独立验证”指在前批稳定基线之上，该批有清楚的通过条件；并非各批无依赖。
+
+  阶段 A — 规划与设计冻结（STEP 1-10；已完成设计确认）
+    成果：README 100 分映射、数据/API/路由/错误语义、D1-D7、QA 策略。
+    证明：初稿后 README 复审与所有者确认；运行基线已在阶段 B 实际验证。
+
+  阶段 B / 后续第 1 批 — 配置、数据底座和最小贯通（已完成；用户手验通过）
+    STEP 11-13；提前实施 STEP 16 的最小详情入口。
+    成果：文件保护、react-ts、依赖/lockfile、base/basename、共享 API 层、
+          目录/缓存基础、三个 route 骨架、一个真实对象的详情及静态入口。
+    证明：原 README/workflow 保留；lint/类型/build；少量浏览器真实 API/图片；
+          最小 Link 导航和详情直接 URL；构建包含深链接入口。
+    限制：本地 URL 通过不能证明 Pages 通过；Pages 配置和推送具备条件时，
+          提前执行 STEP 21-22 的一次最小部署检查，最终交付再验完整版本。
+
+  阶段 C / 后续第 2 批 — List 与来源于 List 的完整 Detail（已完成；用户手验通过）
+    STEP 14 + STEP 16 的 List 来源部分。
+    成果：60 项列表、实时搜索、双属性四组合排序、URL 状态、对象详情、
+          按列表匹配/排序集合的 Previous/Next、首尾循环和返回条件。
+    证明：List 28 分与 List→Detail 闭环；空/单项/多项/刷新/返回/快速切换。
+    限制：Gallery 入口未完成前，不宣称 Details 38 分已全部验收。
+
+  阶段 D / 后续第 3 批 — Gallery 与跨视图一致性/异常闭环（已完成；用户手验通过）
+    STEP 15 + STEP 16 剩余部分；补齐 STEP 13 的失败/重试/样例状态。
+    成果：真实 API 图片、多选 OR/Clear、按图库结果的详情导航、两入口统一，
+          进度/部分失败/缺图/明确样例模式及其独立缓存。
+    证明：Gallery 12 分、两入口与完整 Details；类型过滤、序列不串、
+          切 view 不重下整目录、慢网/故障/样例状态可解释。
+
+  阶段 E / 后续第 4 批 — 视觉完成与发布候选验收（已完成；用户手验通过）
+    STEP 17-20。
+    成果：批准视觉、响应式/键盘、全部 rubric 和异常验收、来源/日志整理，
+          可重复安装、类型/lint/build、最终 README 对照审查。
+    证明：推荐视口、无 inline style/script/table、生产预览、检查清单。
+    限制：线上与提交事项仍需阶段 F；本地通过不等于最终提交完成。
+
+  阶段 F / 后续第 5 批 — 部署、演示和提交（进行中；视频与表单待所有者）
+    STEP 21-24。
+    成果：最终提交/推送、Actions/Pages、线上直达与刷新检查、<=3 分钟
+          Drive 演示、可访问聊天记录、LLM survey、正确 mp2 表单。
+    证明：线上当前版本/有效详情 URL、视频权限/时长、提交确认。
+    外部依赖：新 mp2 的公开性/Pages 设置；录屏、Drive 与表单通常需所有者
+              配合。缺少这些条件不阻止阶段 B-E 的本地工作。
+
+开工前准备分层：
+  - 完全不写业务代码前：D1-D7 已冻结；确认操作目录 mp2；备份原 README、
+    workflow/SOP；检查 Node/npm、网络和现有 origin，保留课程原文。
+  - 初始化后、完整功能前（阶段 B）：安全 scaffold；安装兼容依赖；lockfile；
+    ignore 规则；类型/lint/build；少量 API/CORS/图片验证；路由与 base 验证；
+    来源和日志记录入口。API 浏览器验证与最小路由需要少量验证代码，
+    不应要求在“任何代码都不存在”的状态下完成全部运行验证。
+  - 可与本地开发并行准备：mp2 公开/Pages=GitHub Actions；实际聊天记录
+    导出/分享方式；课程邮箱的 Drive 分享；演示脚本。无需先安装 MCP。
+  - PokéAPI 不需要注册/key/.env/后端。GitHub/Drive/浏览器 MCP 均为可选，
+    有可用工具时复用，没有时采用手动操作，不把连接器配置作为开工卡点。
+
+------------------------------------------------
+STEP 11: SCAFFOLD THE VITE PROJECT SAFELY（第 1 轮已完成）
+------------------------------------------------
+Actions:
+  - 再确认 cwd 是 mp2，备份原 README、.github/workflows/deploy.yml、SOP，
+    备份置于仓库外；保存原文件内容/哈希用于初始化后核对。
+  - 按 README 执行：npm create vite@latest . -- --template react-ts
+    目录非空时选 "Ignore files and continue"；绝不选 "Remove existing files"。
+  - 模板可能覆盖 README。立即从备份恢复课程原文，确认 .github/ 和 SOP
+    完整；不要把模板 README 当成新课程要求，也不以它覆盖本规划。
+  - 依赖未自动安装时 npm install；核对实际 package.json/scripts/engines。
+    实际版本与 Node 支持已核对并记录；首次配置完成后用 npm ci 做可重复安装。
+  - 安装所选兼容版本的 react-router、axios、normalize.css，保留并提交
+    package-lock.json；使用所安装主版本的官方 API，不混用旧 v5 教程。
+  - 检查 .gitignore：node_modules/、dist/、本地 .env；模板业务源文件可追踪。
+    不抄 mp1 的 webpack.config.js、package-lock 或 /build 规则代替 dist。
+  - 运行 npm run dev；最初默认 localhost:5173，加 base 后使用 /mp2/。
+    运行模板的 npm run lint / npm run build，并保存真实结果。
+    出现 engines 不相容时先解决具体版本问题，不执行 audit fix --force。
+
+Verify:
+  - 原 README 字节内容恢复；工作流没被删除；SOP 仍存在。
+  - 新 lockfile 存在、安装/build 可重复；实际生成模板而非想象结构被确认。
+  - 未把“Node 20”理解为任意老的 20.x 都满足实际 Vite 依赖。
+
+------------------------------------------------
+STEP 12: CONFIGURE ROUTES, ASSET BASE AND EARLY DEPLOYMENT PROOF
+------------------------------------------------
+Actions:
+  - 按仓库名称设置 vite.config.ts 的 base: '/mp2/'。
+    BrowserRouter basename={import.meta.env.BASE_URL}；内部导航用 Link。
+    routes：/ → List 默认入口，/list/、/gallery/、/pokemon/:id/、*。
+  - local 公共文件使用 BASE_URL；编译资源通过正常 import；API/远程图用
+    完整 HTTPS URL。Link 不再手动重复加 /mp2，避免 /mp2/mp2。
+  - 实施 D6 推荐方案时，原创构建后脚本从 dist/index.html 复制同一入口到
+    dist/list/index.html、dist/gallery/index.html、批准 ID 的
+    dist/pokemon/<id>/index.html；构建输出仍在 dist。
+    将脚本接入 npm run build 的完成阶段，让现有 CI 自动包含这些入口。
+  - shell 仅引用外部编译脚本/CSS，不添加 inline script；使用 /mp2/ 绝对
+    asset base，因此深目录不会把 assets 误解析到 pokemon/<id>/assets。
+    可生成 dist/404.html 为未知路由显示应用 Not found；它不是有效详情
+    route 的 HTTP 200 保证，不能把 404 页面“看起来打开了”当成全部验收。
+  - 有效 ID 的直接访问与末尾 slash 归一化、query 保留需在 Pages 验证。
+    若生成 shell 方案失败，先修实现；改方案时以 README 重新复审。
+  - 最早用一个真实对象连接三个 view 和详情，并在获授权推送后做线上
+    深链接验证，尽早发现部署问题；不把未实现页面当完成提交。
+
+Verify:
+  - 本地 /mp2/ 与构建预览可用；dist 包含 routes 和正确 asset base。
+  - 线上新标签直接打开 /mp2/pokemon/1/，HTTP/资源有效，硬刷新后显示
+    同一详情。该检查尚 PENDING，不能用 localhost 代替。
+
+------------------------------------------------
+STEP 13: IMPLEMENT TYPED API ACCESS AND SHARED DATA STATE（第 3 轮完成索引/异常/样例）
+------------------------------------------------
+Actions:
+  - 实现 Axios API 层、最小响应类型、运行时关键字段校验、内部模型映射。
+  - 初始 timeout 建议 10 秒；详情队列最多 4 并发；按 ID 存已完成结果和
+    进行中的 Promise，请求只由共享层管理，避免每个卡片再发一遍请求。
+  - 取消当前详情请求时保留其他消费者所需的共享请求；明确请求所有权。
+    返回的 ID 必须与当前 route ID 一致才更新详情画面。
+  - 类型索引完整前显示进度；部分失败保留成功数据并提供针对失败项重试。
+    手动重试或有限退避；429 尊重 Retry-After，不做无限 retry loop。
+  - 缓存最低为会话内存；若以后持久化，需版本、范围、过期和 JSON 解析
+    失败处理。第一版不强制 localStorage 或 service worker。
+  - 样例模式按 D7 实施，读取本地 JSON 也可用 Axios，经 BASE_URL 定位；
+    保存来源/采集日期，明确范围，不以 mock 替代正常条件下的真实 API。
+
+Verify:
+  - 切 List/Gallery/Detail 不重取全部数据；输入搜索不触发整目录请求。
+  - 慢网快速切详情时不出现上一 ID 覆盖当前 ID；取消不显示错误红条。
+  - 无 any 蔓延、假数据默认值或吞掉异常的空 catch。
+
+------------------------------------------------
+STEP 14: IMPLEMENT THE LIST VIEW（第 2 轮已完成）
+------------------------------------------------
+Actions:
+  - 实现搜索、Name/Number 属性选择、独立升降序、计数与列表主链接。
+  - 使用 STEP 7 纯选择器与受控 query；URL 与显示控件保持同步。
+  - 明确目录范围；分别渲染加载、错误、无匹配、正常结果。
+  - 点击的 ID 和来源 query 写入 Detail Link，不使用行号做 item identity。
+
+Verify:
+  - 对应 L1-L4 的 28 分：逐字过滤；两个属性各自两方向正确。
+  - 输入、排序、清空、返回页面都保持正确状态和稳定的对象身份。
+
+------------------------------------------------
+STEP 15: IMPLEMENT THE GALLERY VIEW（第 3 轮已完成）
+------------------------------------------------
+Actions:
+  - 实现 API 媒体卡片、实际类型选项、多选/清空、结果计数与详情链接。
+  - 使用完整类型索引和已批准 OR 多选；每项以稳定 ID 为 React key。
+  - 懒加载远离视口的图片，固定媒体容器比例；失败占位保留名称/导航。
+  - 卡片链接不包嵌套 button；filter 控件与 item navigation 分开。
+
+Verify:
+  - 对应 G1/G2 的 12 分：真实对象图片、点击过滤确实改变且内容正确。
+  - 双类型对象不会重复出现；取消/清空恢复正确结果。
+
+------------------------------------------------
+STEP 16: IMPLEMENT THE ROUTED DETAIL VIEW（List/Gallery 来源本地验收已完成）
+------------------------------------------------
+Actions:
+  - 从 params 验证 ID，优先缓存/按 ID Axios 请求，展示具体属性及正确单位。
+  - 从 URL 重建来源集合，计算 index、previousId/nextId，并实施 D5 边界。
+  - Previous/Next 使用可用的 Link 或禁用按钮，保留 query；加载时不显示
+    另一对象的旧数据，不丢失返回来源条件。
+  - 直达/刷新不依赖任何已经访问过的 view；非法 ID/超范围有返回入口。
+  - 更新标题与必要焦点/滚动反馈，避免键盘导航后焦点消失。
+
+Verify:
+  - 对应 D1-D4 的 38 分：两个入口都正确，字段与 ID 匹配，前后导航正确。
+  - 列表排序/搜索与图库筛选后的序列都按约定；直达/刷新也能导航。
+
+------------------------------------------------
+STEP 17: COMPLETE CSS MODULES, RESPONSIVE DESIGN AND FEEDBACK
+------------------------------------------------
+Actions:
+  - 实施 D2/D3 的文案、palette、间距、网格、焦点、选中/禁用/错误状态。
+  - 使用 global tokens + CSS Modules；移除模板演示 logos/样式占位。
+  - 详情属性窄屏堆叠，工具栏换行；类型标记同时有文字；loading 预留空间、减少布局位移，不承诺零位移。
+  - 只做有助于状态识别的少量 transition，尊重 reduced motion。
+
+Verify:
+  - Design 的 10 分有完整三页视觉证据；功能控件不因追求画面而隐藏。
+  - DOM 中没有 style 属性；无 table 布局/inline script；推荐尺寸可操作。
+
+------------------------------------------------
+STEP 18: RUN THE FUNCTIONAL, RESPONSIVE AND ACCESSIBILITY QA MATRIX
+------------------------------------------------
+Actions:
+  - 按 STEP 9 覆盖全部评分动作，并在 STEP 8 的推荐尺寸执行核心操作。
+  - 检查两个来源、多项/单项/空结果、前后/首尾、刷新、新标签、浏览器历史。
+  - 检查真实 API 正常及故障状态；键盘、图片 alt、焦点、对比、缩放。
+  - 记录失败的输入/URL/视口/网络条件，修复原因后只重跑受影响检查。
+
+Verify:
+  - 功能、边界和 UI 状态均通过；没有未解释的 console/network 错误。
+  - Mock 注入的故障与真实线上不可用情况明确区分。
+
+------------------------------------------------
+STEP 19: FINAL RULES, SOURCES AND LLM COMPLIANCE CHECK
+------------------------------------------------
+Actions:
+  - 搜索源文件和检查最终 DOM：style= / style 属性、.style 写入、含执行
+    内容的 script、HTML table 布局；也检查库生成输出而非只查手写 JSX。
+    正常 JSX onClick/onChange 与外部 Vite module 脚本可以保留。
+  - 确认没有付费 API、私密 key、复制粘贴的第三方代码或未声明参考资料。
+  - SOURCES.md 包含本 SOP/实现使用的官方阅读来源和实际媒体来源；
+    API 响应快照、样例模式和额外参考也申报。
+  - 如果使用 LLM 生成代码，准备真实、可访问的聊天记录随源码提交，
+    建立 mp2 的日志索引；填写课程 LLM survey，不用示例链接充数。
+
+Verify:
+  - 全部规则按 mp2 README 校验，没有误继承 mp1 的禁库/禁 JSX 事件规则。
+  - 来源和日志不留占位符；分享记录前核对内容，不公开个人凭据。
+
+------------------------------------------------
+STEP 20: FINAL BUILD AND REVIEW AGAINST README
+------------------------------------------------
+Actions:
+  - 从 lockfile 执行 npm ci，执行项目实际 lint/类型检查与 npm run build。
+  - 核对 dist/index.html、assets 和有效 route 入口；不修改 workflow 输出
+    到 build/。使用 npm run preview 验证构建产品。
+  - 对照最终 README 重走 STEP 1 的 100 分映射及非评分行强制要求。
+  - 逐文件审核变更，确认依赖版本、错误处理、目录范围、导航语义和
+    no-inline 规则；审查实际实现偏离 SOP 的地方并修正文档。
+
+Verify:
+  - build/类型/lint 实际通过；dist 可运行；有效 route 入口完整。
+  - README 与实现无已知冲突；不是以“符合 SOP”替代“符合 README”。
+
+------------------------------------------------
+STEP 21: COMMIT AND PUSH
+------------------------------------------------
+Actions:
+  - 经所有者当时授权，检查 git status/diff，仅提交源码、配置、lockfile、
+    文档、实际需要的样例/媒体和日志；不提交 node_modules、dist、备份或 .env。
+  - 推到现有 origin 的 main，让当前工作流触发；不重做已有 Git 基础设置。
+
+Verify:
+  - 提交包含 package-lock.json、原课程 README 与 .github/workflows/deploy.yml。
+  - 推送的是最终已校验内容，而非只有本地最新、线上旧版。
+
+------------------------------------------------
+STEP 22: VERIFY GITHUB PAGES DEPLOYMENT
+------------------------------------------------
+Actions:
+  - 在 mp2 仓库 Settings → Pages 确认 Source = GitHub Actions，仓库公开。
+    这项必须核对新仓库；第 5 轮已通过 GitHub API 确认公开、build_type=workflow、HTTPS enforced。
+  - 检查本次 build/deploy jobs；若构建成功但 Pages 尚未启用，修正设置后
+    重跑失败 job 或 workflow_dispatch，不为重跑制造无意义代码改动。
+  - 目标地址（来自 origin）：https://zane1ee.github.io/mp2/。
+    README 的约 1 分钟是估计，不把等待时长当成功或失败判据。
+  - 在实际线上站点检查全部评分交互和资源，再复制详情 URL 到新标签：
+    有效 ID 直达、硬刷新、带来源 query 的顺序、/list/、/gallery/、未知路由。
+    检查 response/status、资源路径与 console，不能只靠站内点击成功。
+
+Verify:
+  - Actions green；线上当前提交可用；所有有效详情深链接和媒体正常。
+  - 与 localhost 一致；没有 /mp2/mp2、错误根路径或详情硬刷新 404。
+
+------------------------------------------------
+STEP 23: RECORD THE REQUIRED DEMO VIDEO
+------------------------------------------------
+Actions:
+  - REQUIRED：演示部署后的页面，最多 3 分钟，先显示 URL，覆盖全部功能。
+  - 推荐顺序：0:00-0:15 URL/范围；0:15-1:00 逐字搜索及两属性四种排序；
+    1:00-1:30 图库图片、多选与清空；1:30-2:20 两个入口、详情字段、
+    Previous/Next；2:20-2:40 分享 URL/刷新；余下时间展示设计/窄屏。
+  - 上传 Google Drive，共享给 uiuc.web.programming@gmail.com；检查
+    收件方可访问。公开视频链接才适合用未登录窗口验证；若仅定向分享，
+    检查邮箱权限，不能要求未登录也能访问作为必需条件。
+  - 若确实无法部署，README 允许本地演示，但最高 80%；必须先展示
+    git status 和 git log。它是提交兜底，不是正常完成部署验收。
+
+Verify:
+  - 时长 <=3:00；URL 与所有评分功能可见；Drive 链接权限正确。
+  - 项目中的图片/媒体与这个提交演示视频是不同用途，不继承 mp1 视频要求。
+
+------------------------------------------------
+STEP 24: SUBMIT
+------------------------------------------------
+Actions:
+  - 使用 mp2 表单：https://forms.gle/PkYq9RaMFG8MaMjF7。
+    按表单实际字段填 repository、部署站点、视频与来源信息。
+  - 使用 LLM 生成代码时随源码提交 chatlogs 并回答 LLM experience survey。
+  - 在 2026-10-06 11:59 PM CT 前完成提交；核对确认页面及链接权限。
+
+Verify:
+  - 收到提交确认；staff 能访问 repo、站点、视频和要求的日志。
+  - 不误用 mp1 的表单/URL/日志记录；提交状态必须由实际完成证明。
+
+------------------------------------------------
+LLM EXECUTION-SPECIFIC REQUIREMENTS
+------------------------------------------------
+- 原规划轮扫描 mp2 非 Git 文件及适用祖先目录，没有发现 AGENTS.md、.agents/、
+  .codex/ 项目记忆或其他单独的 LLM 执行任务文件。初始化前 mp2 仅有 README
+  和部署工作流；参考记忆来自相关 mp1 聊天记录，不是另一个 mp2 指令文件。
+- README 的专门 LLM Usage Policy：若 LLM 用于生成 MP 代码，必须
+    1. 随源码提交 chatlogs；
+    2. 在 grading form 回答 LLM 使用体验 survey；
+    3. 不履行会违反课程 academic integrity policy。
+  README 未规定一定使用 CSV、某个日志平台或某个 MCP。llm_logs.csv 只是
+  沿用 mp1 的推荐索引方式，不能仅提交一份无真实记录的 CSV。
+- 原规划轮只有规划；第 1-5 轮已使用 LLM 生成代码/交付文档，README 的日志和 survey
+  义务已触发。本地实际记录见 docs/llm/mp2-chatlog.md 与 llm_logs.csv；
+  导出有明确截止点，第 5 轮结束前再更新并随源码实际提交，survey 尚未填写。
+- 一般 Rules 的个人作业、不得复制粘贴他人代码、声明所有参考来源对全部
+  开发过程生效；它们是通用课程规则，不是隐藏的 LLM 专属任务。
+- 所有者原规划轮要求：先产出 SOP，再经确认进入开发；冲突以 README 为准；
+  单列自定义设计供拍板。STEP 10 已通过，D1-D7 获批，第 1-5 轮均已获授权。
+- 没有发现要求 LLM 额外植入特定文字/代码、执行隐藏任务或配置 MCP 的指令。
+
+------------------------------------------------
+POST-DRAFT REVIEW AGAINST THE MP2 README
+------------------------------------------------
+Review status: COMPLETED for this planning draft on 2026-10-05。
+初稿完成后重新逐行阅读原 README，核对现有 workflow 和 mp1 SOP 组织方式。
+这是规划复审通过；不表示安装、API 浏览器访问、功能或部署已经通过。
+
+README → SOP 覆盖记录（行号以当前原 README 为准）：
+  - L15-18 React SPA / API：STEP 1、3、4、6。
+  - L28-34 免费 API / mock / 缓存 / 错误：STEP 1、6、7、13、D7。
+  - L37 List 实时搜索/排序：STEP 4、7、14、QA L1-L4。
+  - L38 Gallery 媒体/属性过滤：STEP 4、7、15、QA G1-G2。
+  - L39 Detail 两入口/属性/前后/专属 URL：STEP 4、7、12、16、22。
+  - L43-46 Router/Axios/TypeScript：STEP 1、3、6、11、13、20。
+  - L51-69 评分：STEP 1 的 12 项加总 100；STEP 9 与 Done Criteria 对应。
+  - L71-85 Tips / Rules：STEP 1、8、19；库允许、inline/table 仍禁止。
+  - L87-99 Vite react-ts / dev / dist：STEP 2、11、12、20。
+  - L105-116 仓库/保留文件/恢复 README/lockfile：STEP 2、11、21、22。
+  - L117-133 base/basename/Link/Pages Source：STEP 12、22。
+  - L134-146 push/部署/视频/80% 本地兜底/表单：STEP 21-24。
+  - L148-151 LLM 日志与 survey：STEP 19、24、LLM EXECUTION 专项。
+
+复审确认/修订的关键边界：
+  1. README 优先级高于 SOP、旧项目经验和实际模板推断；mp1 的
+     “当前代码最高置信度”顺序没有照搬到空项目 mp2。
+  2. 两个排序属性与各自升降序分别验收；Axios 虽无单列分值仍是必需。
+  3. Gallery 必须用 API 的 item media；普通背景或自定义插画不能替代。
+  4. Detail route 直接访问属于要求；本地可点开不证明 Pages 刷新可用。
+     D6 入口复制是解决部署问题的待验证设计，未宣称是 README 要求。
+  5. D6 保留 BrowserRouter/basename；未未经确认改用 hash 路由，也未
+     使用违反 no-inline-script 的常见重定向片段。有效 route 与 404 区分。
+  6. react-ts 初始化前必须保护文件，之后恢复原 README；首次 npm install
+     与后续 npm ci 的时机明确。真实产物是 dist，不是 mp1 的 build。
+  7. mp2 允许组件库，React JSX 事件正常；不继承 mp1 禁库或把 JSX onClick
+     误判成 inline script。no inline styling / scripts / table layout 仍检查。
+  8. 60 项、推荐分辨率、OR、多选、首尾循环、字段清单与英文浅蓝风格均
+     标为建议/自定义；README 没有额外数量或版式硬约束。
+  9. 只记录已实际读到的状态；无 npm/build/API 浏览器/Pages 验证的虚假
+     勾选。MCP 是可选工具，不被写成课程前置要求。
+ 10. 保留 mp1 的新仓库 Pages 配置失败经验，但不重复基础 Git 设置。
+     新 mp2 的公开性与 Pages Source 尚未核实，不假定自动继承。
+ 11. 样例模式允许用于 API 不可用；缓存、范围、媒体和标识需一致，
+     不以未加载或部分失败假称零结果，不伪装实时数据。
+ 12. Drive 定向邮箱分享与公开链接检查区分；不额外强制公开视频。
+     LLM 的明确触发条件为生成代码，CSV 文件名不是课程规定。
+
+结论：本规划未发现与当前 README 的已知冲突；D1-D7 已于 2026-10-05 获批采用推荐值。
+任何后续范围/API/路由变更须重新对照 README。第 1-4 轮已按批准方案执行，见下方验收记录。
+
+------------------------------------------------
+ROUND 1 IMPLEMENTATION REVIEW / ACCEPTANCE (2026-10-05)
+------------------------------------------------
+- 所有者已完成副本备份，并授权按 5 轮流程执行第 1 轮。
+- 安全完成 Vite react-ts；README 恢复且与初始化前一致，工作流原文未改。
+- 实际依赖兼容修订：React Router 8 / Vitest 5 要求更高 Node，改锁定
+  React Router 7.18.4 / Vitest 4.1.11；Node v20.20.2 的 npm ci、lint、
+  10 项测试、build 实际全部通过。保留 Node 20 工作流和 dist 输出。
+- 当前业务：真实 API 60 项基础 List、单张真实图片的 Gallery、两个入口、
+  按 URL ID 的 Detail；会话共享缓存/去重/4 并发/状态/重试与字段校验。
+- 生产构建有 62 个有效静态 route 入口及 404.html，引用统一 /mp2/assets。
+  普通静态服务的有效 route HTTP 200、详情直达/刷新和 query 保留已验证。
+- 浏览器真实图片/字段、错误 ID、390px 无溢出、正常页 console 已验证；
+  生产 app 无 inline style/script/table。完整屏幕与故障矩阵在后续轮执行。
+- 来源清单/日志表头已建立；真实聊天记录未补齐，最终 LLM 提交义务未完成。
+- 本轮未执行搜索/排序、完整 Gallery 过滤、Previous/Next、样例模式、
+  推送/部署/录屏/表单。不会以最小详情验收代替完整 Details 38 分验收。
+- 用户手动复现、命令、预期值与可选线上验证步骤：ROUND1_ACCEPTANCE.md。
+
+------------------------------------------------
+ROUND 2 IMPLEMENTATION REVIEW / ACCEPTANCE (2026-10-05)
+------------------------------------------------
+- 所有者已确认第 1 轮手动验收无问题，授权执行第 2 轮。
+- STEP 14 完成：真实 60 项 List、as-you-type、Name/Number 四组合排序、
+  URL 条件、计数/空结果/Clear。排序不原地修改共享目录；query 控件更新
+  使用 replace，避免每个字符新增历史记录；Clear 保留排序。
+- STEP 16 的 List 来源完成：按匹配并排序后的结果循环、单项禁用、
+  返回保留条件、刷新/新标签/历史恢复。无来源按 ID 浏览全目录。
+  来源不匹配显示提示并用 browse=all 持续浏览全目录，返回仍保留原条件。
+- 继续使用既有 API、共享缓存和版本；package.json/lockfile/README/workflow
+  与本轮开始前逐字节一致，无新增依赖或 MCP。
+- Node v20.20.2 下 lint、25 项测试（2 文件）及包含类型检查的 build 通过。
+  测试覆盖搜索/四组合/数值排序/不变性/URL 编解码/边界/来源回退，
+  原去重/并发/重试/乱序测试继续通过。
+- 实际浏览器验证 char 四组合、空白/大小写/特殊字符/清空、3 项双向循环、
+  单项禁用、刷新/历史/返回、默认 ID 顺序与来源不匹配。
+- 普通静态服务器已验证带来源条件的详情直达/刷新/返回；构建仍包含
+  62 个 route shell 与 404。实际 GitHub Pages 尚未验证。
+- 390px List/Detail 无横向溢出；键盘 Enter 导航通过；正常页 console
+  无 warning/error；检查的生产应用 DOM 无 inline style/script/table。
+  完整故障/响应式矩阵仍按后续轮次执行，不把本轮检查冒充最终全部通过。
+- README 复审未发现本轮冲突：List 28 分覆盖；Details 仍需第 3 轮的完整
+  Gallery 来源才能整体验收。Gallery 当前单卡入口回归通过，前后按单项禁用。
+- 未推送/部署；未补齐真实聊天记录或提交 survey。手动验收见 ROUND2_ACCEPTANCE.md。
+
+------------------------------------------------
+ROUND 3 IMPLEMENTATION REVIEW / ACCEPTANCE (2026-10-05)
+------------------------------------------------
+- 所有者已确认第 2 轮手动验收无问题，授权执行第 3 轮。
+- STEP 15 与 STEP 16 完成：真实 60 项图库、API 媒体/名称/编号/类型、
+  实际类型候选、多选 OR/Clear、重复 type query、图库来源详情序列与返回。
+  详情 URL 刷新重建完整类型索引，单项禁用、首尾循环与来源回退统一。
+- STEP 13 补齐：加载进度/部分失败/保留成功卡片/仅重试失败项；类型索引
+  全部成功才开放筛选和图库序列，未知/缺失类型不充当有效空匹配。
+  保留共享缓存、请求去重与 4 并发；筛选与切 view 不重新请求成功对象。
+- D7 样例实际范围：ID 1/4/7/25/39/60，来自 2026-10-06 01:19 UTC
+  的真实 API 字段（当地 10 月 5 日），source/capturedAt 保存在本地 JSON。
+  Axios 经 BASE_URL 读取；明确 Sample mode / 六项范围 / 图片仍需网络。
+  mode=sample 跨三个 view 与导航保存，两套仓库/缓存隔离，默认仍 live。
+- 429 的 Retry-After 秒数/日期均处理：UI 倒计时与数据层共同防止提前重试，
+  阻止剩余队列发 HTTP；已发请求可以完成。到期后仍需用户手动重试。
+- 复审修复 Gallery Detail 的目录错误 Retry：同时恢复目录与图库索引，
+  不仅取得名单后停留在永远 pending 的状态。新增对应回归测试。
+- 最终 Node v20.20.2 下 lint、39 项测试（3 文件）、类型检查/生产 build 通过。
+  README/workflow/package.json/lockfile 与本轮开始前逐字节一致，无新增依赖/MCP。
+- 真实浏览器结果：Fire 7、Water 6、Fire OR Water 13、Grass OR Poison 23且不重复；
+  首尾循环、取消/Clear、历史/刷新/返回、空筛选、样例与 List 回归通过。
+- 独立临时静态副本/合成 HTTP API 验证 503 部分失败、单项重试/缓存、
+  缺图与坏图、实际 10 秒 timeout、目录失败及恢复、429 停止队列/倒计时、
+  慢响应快速切 ID。合成响应未进入项目或正式 dist，交付前关闭临时服务。
+- 原样生产静态服务器：图库条件和样例详情直达/刷新/返回、JSON 路径通过。
+  390px Gallery/Detail 无横向溢出；Space/Enter 操作通过；正常页 console
+  无 warning/error；生产应用无 inline style/script/table。实际 Pages 未验证。
+- README 复审：Gallery 12 分与两个入口/属性/前后导航的本地功能闭环完成；
+  OR、60 项、循环、有限样例仍标为批准设计，不追加课程硬约束。
+  不把此状态当成 Design 全屏/故障矩阵最终验收、实际部署或课程提交完成。
+- 详细手动步骤与精确预期：ROUND3_ACCEPTANCE.md。第 4/5 轮和真实 LLM 日志仍待完成。
+
+------------------------------------------------
+ROUND 4 IMPLEMENTATION REVIEW / ACCEPTANCE (2026-10-05–06)
+------------------------------------------------
+- 所有者确认第 3 轮手验通过，授权第 4 轮；外部中断后继续原有改动完成。
+- STEP 17 本地完成：统一 tokens/控件/状态，44px 操作区域，窄屏自适应属性、
+  工具栏与导航；预留详情加载高度、减少位移；尊重 reduced motion。
+- STEP 18 本地矩阵通过：1440x900、1024x768、768x1024、390x844、320x800
+  的三页核心操作无横向溢出；200% 文字放大在 320/390/768px 三页通过。
+  原生浏览器 200% 页面缩放与屏幕阅读器全面实测未冒充已测，前者留给本轮手验。
+- 修复实际问题：320px + 200% 文字导致 List 固有宽度溢出；根路由 List
+  active 标记；缺 sprites 误拒绝有效详情；超大 Retry-After 产生 Infinity；
+  键盘 Retry 成功后按钮卸载导致焦点丢失。受影响检查均复测通过。
+- 切页聚焦主标题，query 操作保留控件焦点；状态页单个 h1 和正确 document
+  title；图库卡片明确 accessible name，aria-busy，倒计时不进入 alert。
+- 异常验证：TCP 断连、503 部分失败/单项补发、错误 ID/类型、不完整目录、
+  缺字段/图片404、10秒超时、429 等待/停止后续队列、样例503/坏内容/恢复。
+  独立临时副本注入；不改真实 dist 的 API，不向真实服务制造限流。
+- STEP 19 本轮部分完成：源码/产物/应用 DOM 约束通过；SOURCES 更新；
+  docs/llm/mp2-chatlog.md 是本次项目会话实际可见记录及调用代码的截止快照，
+  llm_logs.csv 已有真实路径。排除内部推理/系统信息/工具输出并匿名化路径。
+  最终更新、随源码实际提交及课程 LLM survey 仍待 STEP 21/24。
+- STEP 20 完成：同一 lockfile 独立 Node 20.20.2 npm ci；最终 lint、strict
+  类型检查、41 项测试/4文件及 build 通过；62 route +404、base资源、样例一致。
+  原项目与独立目录最终构建一致；原 README/workflow/依赖/样例未改。
+- 正常生产浏览器 console warning/error 为空；#root 内无 style/table/inline
+  script。浏览器工具在 root 外的批注浮层不属于项目；产物 HTML 独立检查通过。
+- 对照全部 12 项/100 分功能和 README 非评分强制项，未发现已知冲突；
+  该映射是本地验收，不是课程给分或线上提交证明。无新的个性化拍板事项。
+- 三页真实截图和视口记录在 docs/qa/；手动操作/预期见 ROUND4_ACCEPTANCE.md。
+  未推送/部署/上传/提交，第 5 轮仍待授权执行。
+
+------------------------------------------------
+READING / SOURCE REGISTER FOR THIS PLANNING DRAFT
+------------------------------------------------
+访问/核对日期：2026-10-05。已在 SOURCES.md 登记，并持续追加实际实现参考。
+- mp2/README.md：本次任务和提交要求的最高依据。
+- mp2/.github/workflows/deploy.yml：当前 Node 20 / npm ci / dist 工作流。
+- mp1/SOP.txt、mp1/SOURCES.md、聊天“制定mp1开发SOP文档”：结构与经验。
+- https://pokeapi.co/docs/v2 ：免认证、使用政策、分页及 Pokemon 响应字段。
+- https://api.artic.edu/docs/ ：备选 API 文档；备选还需单独设计与实际校验。
+- https://vite.dev/guide/ ：当前 scaffold 与 Node 支持说明。
+- https://vite.dev/guide/static-deploy.html ：GitHub Pages asset base。
+- https://reactrouter.com/api/declarative-routers/BrowserRouter ：路由/basename。
+- https://axios-http.com/docs/cancellation ：请求取消（官方入口当前跳转
+  https://axios.rest/pages/advanced/cancellation）。
+- https://react.dev/reference/react/StrictMode ：开发期 effect 清理检查。
+- https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
+  与 https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site
+  ：Pages 与静态入口/404 行为背景；静态 route shell 是本 SOP 的工程设计，
+  不是这两份文档承诺的 React 自动 fallback。
+
+------------------------------------------------
+DONE CRITERIA (all must be true；本地发布候选已验证，用户手验/部署/提交仍待执行)
+------------------------------------------------
+[x] D1-D7 获批采用推荐方案（2026-10-05）
+[x] 所有者明确授权第 1 轮初始化/实现（2026-10-05）
+[x] react-ts 安全初始化，原 README/workflow 保留，lockfile 已生成
+[ ] lockfile 随源码实际提交到仓库
+[x] React + TypeScript + React Router + Axios 实际使用且构建通过
+[x] List 展示所选 API 相关对象（4；第 2 轮）
+[x] 搜索 as-you-type，清空/空白/大小写/无匹配行为正确（8；第 2 轮）
+[x] 至少两种不同属性可排序（8），各自升降序正确（8；第 2 轮）
+[x] Gallery 展示 item media（4），属性过滤改变正确结果（8；第 3 轮）
+[x] List 点击去详情（10），Gallery 点击去同一详情（10；第 2-3 轮）
+[x] 详情属性与选中对象对应（8；第 3 轮）
+[x] Previous/Next 按批准集合/顺序与边界语义正确（10；第 2-3 轮）
+[ ] 详情有专属 route，线上特定 URL 直达/刷新可用
+[x] 三个 view 设计一致、推荐屏幕/键盘本地可操作（Design 10；第 4 轮）
+[x] 第 4 轮用户手验通过，包括手验清单中的原生 200% 缩放（所有者确认无问题）
+[x] 加载/空/错误/重试/缺图/快速切换可控，无目录范围误导（第 2-4 轮）
+[x] 当前生产 app 无 inline styling、inline script tags、table layout 或付费 API
+[x] 当前参考来源与媒体已申报，本地实际 LLM 截止记录已准备（第 4 轮）
+[ ] 最终 LLM 记录已更新、随源码提交，并完成课程 survey
+[x] clean install、lint、strict 类型检查、41测试、build 与本地最终 README review 通过（第 4 轮）
+[ ] GitHub Actions 部署 green，线上功能/资源/深链接通过
+[ ] <=3 分钟视频覆盖要求并共享给课程邮箱
+[ ] 正确 mp2 表单提交成功且在 README 截止时间前完成

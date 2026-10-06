@@ -1,0 +1,229 @@
+{
+  "viewMatrix": [
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "list": {
+        "focus": "pokemon-search",
+        "headings": 1,
+        "minButton": 44,
+        "scrollWidth": 1440,
+        "width": 1440
+      },
+      "detail": {
+        "focus": "detail-title",
+        "headings": 1,
+        "navigation": "flex",
+        "scrollWidth": 1440,
+        "width": 1440
+      },
+      "gallery": {
+        "columns": "249.602px 249.602px 249.602px 249.609px",
+        "headings": 1,
+        "minTypeLabel": 44,
+        "scrollWidth": 1440,
+        "width": 1440
+      }
+    },
+    {
+      "size": {
+        "width": 1024,
+        "height": 768
+      },
+      "list": {
+        "focus": "pokemon-search",
+        "headings": 1,
+        "minButton": 44,
+        "scrollWidth": 1024,
+        "width": 1024
+      },
+      "detail": {
+        "focus": "detail-title",
+        "headings": 1,
+        "navigation": "flex",
+        "scrollWidth": 1024,
+        "width": 1024
+      },
+      "gallery": {
+        "columns": "225.602px 225.602px 225.602px 225.609px",
+        "headings": 1,
+        "minTypeLabel": 44,
+        "scrollWidth": 1024,
+        "width": 1024
+      }
+    },
+    {
+      "size": {
+        "width": 768,
+        "height": 1024
+      },
+      "list": {
+        "focus": "pokemon-search",
+        "headings": 1,
+        "minButton": 44,
+        "scrollWidth": 768,
+        "width": 768
+      },
+      "detail": {
+        "focus": "detail-title",
+        "headings": 1,
+        "navigation": "flex",
+        "scrollWidth": 768,
+        "width": 768
+      },
+      "gallery": {
+        "columns": "221.867px 221.867px 221.875px",
+        "headings": 1,
+        "minTypeLabel": 44,
+        "scrollWidth": 768,
+        "width": 768
+      }
+    },
+    {
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "list": {
+        "focus": "pokemon-search",
+        "headings": 1,
+        "minButton": 44,
+        "scrollWidth": 390,
+        "width": 390
+      },
+      "detail": {
+        "focus": "detail-title",
+        "headings": 1,
+        "navigation": "grid",
+        "scrollWidth": 390,
+        "width": 390
+      },
+      "gallery": {
+        "columns": "358px",
+        "headings": 1,
+        "minTypeLabel": 44,
+        "scrollWidth": 390,
+        "width": 390
+      }
+    },
+    {
+      "size": {
+        "width": 320,
+        "height": 800
+      },
+      "list": {
+        "focus": "pokemon-search",
+        "headings": 1,
+        "minButton": 44,
+        "scrollWidth": 320,
+        "width": 320
+      },
+      "detail": {
+        "focus": "detail-title",
+        "headings": 1,
+        "navigation": "grid",
+        "scrollWidth": 320,
+        "width": 320
+      },
+      "gallery": {
+        "columns": "288px",
+        "headings": 1,
+        "minTypeLabel": 44,
+        "scrollWidth": 320,
+        "width": 320
+      }
+    }
+  ],
+  "finalListRetest": [
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "h1": 1,
+      "height": 900,
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "size": {
+        "width": 1024,
+        "height": 768
+      },
+      "h1": 1,
+      "height": 768,
+      "scrollWidth": 1024,
+      "width": 1024
+    },
+    {
+      "size": {
+        "width": 768,
+        "height": 1024
+      },
+      "h1": 1,
+      "height": 1024,
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "h1": 1,
+      "height": 844,
+      "scrollWidth": 390,
+      "width": 390
+    },
+    {
+      "size": {
+        "width": 320,
+        "height": 800
+      },
+      "h1": 1,
+      "height": 800,
+      "scrollWidth": 320,
+      "width": 320
+    }
+  ],
+  "sorts": [
+    {
+      "sort": "id",
+      "order": "asc",
+      "actual": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "sort": "id",
+      "order": "desc",
+      "actual": [
+        6,
+        5,
+        4
+      ]
+    },
+    {
+      "sort": "name",
+      "order": "asc",
+      "actual": [
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "sort": "name",
+      "order": "desc",
+      "actual": [
+        5,
+        4,
+        6
+      ]
+    }
+  ]
+}

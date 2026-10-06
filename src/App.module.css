@@ -1,0 +1,21 @@
+.header { border-bottom: 1px solid var(--border); background: white; }
+.headerInner { max-width: 1120px; margin: auto; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.brand { font-weight: 750; letter-spacing: -.04em; font-size: 1.5rem; }
+.brand span { font-weight: 450; color: var(--accent); }
+.header nav { display: flex; gap: .35rem; }
+.navLink, .active { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .65rem 1rem; border-radius: .6rem; font-size: .92rem; font-weight: 600; }
+.navLink { color: var(--muted); }
+.active { background: #e5f5ff; color: var(--accent); }
+.main { max-width: 1120px; margin: auto; padding: 4rem 2rem; min-height: calc(100vh - 180px); }
+.footer { max-width: 1120px; margin: auto; padding: 1.5rem 2rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--border); font-size: .8rem; color: var(--muted); }
+.footer a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: underline; text-underline-offset: 3px; }
+.main { outline-offset: -4px; }
+.dataNotice, .sampleNotice { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.1rem 1.3rem; margin-bottom: 2.5rem; border: 1px solid var(--border); border-radius: .9rem; background: #eaf6ff; }
+.sampleNotice { background: #fff5df; border-color: #e7c889; }
+.dataNotice strong, .sampleNotice strong { font-size: .9rem; }
+.dataNotice > div, .sampleNotice > div { min-width: 0; overflow-wrap: anywhere; }
+.dataNotice p, .sampleNotice p { color: var(--muted); font-size: .85rem; line-height: 1.6; margin: .35rem 0 0; }
+.dataNotice button, .sampleNotice button { flex-shrink: 0; font-size: .85rem; max-width: 100%; overflow-wrap: anywhere; }
+.sampleNotice a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--accent); font-size: .8rem; margin-top: .5rem; text-decoration: underline; }
+@media (max-width: 620px) { .dataNotice, .sampleNotice { align-items: flex-start; flex-direction: column; gap: 1rem; } }
+@media (max-width: 620px) { .headerInner { padding: 1rem; flex-wrap: wrap; } .brand { font-size: 1.3rem; } .main { padding: 2.5rem 1rem; } .footer { padding: 1.5rem 1rem; flex-direction: column; } }

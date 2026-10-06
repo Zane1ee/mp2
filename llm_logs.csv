@@ -1,0 +1,2 @@
+conversation,log_path,scope
+MP2 planning and implementation,docs/llm/mp2-chatlog.md,"Actual local conversation through the documented export checkpoint"

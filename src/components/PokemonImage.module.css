@@ -1,0 +1,11 @@
+.frame {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 1.25rem;
+  background: var(--surface-soft);
+  overflow: hidden;
+}
+
+.frame img { width: 85%; height: 85%; object-fit: contain; }
+.placeholder { padding: 2rem; color: var(--muted); text-align: center; }

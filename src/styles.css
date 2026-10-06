@@ -1,0 +1,32 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #16364a;
+  background: #f6fbff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --accent: #00689d;
+  --muted: #547084;
+  --border: #d9e6ef;
+  --control-border: #7c93a3;
+  --surface: #fff;
+  --surface-soft: #edf7fd;
+  --surface-tint: #e5f5ff;
+  --danger: #8d3229;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; line-height: 1.4; color: white; background: var(--accent); border: 0; border-radius: .5rem; padding: .65rem 1rem; min-height: 2.75rem; cursor: pointer; }
+button:disabled { opacity: .6; cursor: default; }
+button:not(:disabled):hover { background: #005480; }
+a, button, input, select { transition: background-color .15s, border-color .15s; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, h1:focus-visible, main:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1.15; letter-spacing: -.045em; margin: .65rem 0 1rem; overflow-wrap: anywhere; }
+.eyebrow { color: var(--accent); font-size: .75rem; letter-spacing: .16em; font-weight: 700; }
+.text-link { color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; padding: .5rem 0; min-height: 2.75rem; }
+.status-message { padding: 1.5rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); color: var(--muted); line-height: 1.7; overflow-wrap: anywhere; }
+.status-message p { margin-top: 0; }
+.status-error { border-color: #e5c4be; color: var(--danger); background: #fff6f4; }
+.skip-link { position: absolute; top: .5rem; left: .5rem; padding: 1rem; background: var(--surface); color: var(--accent); transform: translateY(-200%); z-index: 10; }
+.skip-link:focus { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto; animation: none; transition: none; } }
