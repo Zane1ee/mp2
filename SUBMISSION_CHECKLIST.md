@@ -1,7 +1,7 @@
 # MP2 提交清单
 
 课程截止：**2026-10-06 11:59 PM CT（America/Chicago）**，以原 README 为准。
-功能开发与第 1–4 轮验收已结束。第 5 轮负责源码发布、线上验证及提交准备；最终部署结果另见 ROUND5_ACCEPTANCE.md。
+功能开发与技术发布已完成，实际源码和聊天记录已推送，Actions 与真实线上验收通过。详见 ROUND5_ACCEPTANCE.md；视频、Drive 权限、本人 survey/表单仍需您完成。
 
 ## 需要提交什么
 

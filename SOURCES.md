@@ -27,7 +27,7 @@ project; documentation is used as reference, with no copied application snippets
   only inside tests, not as a disguised live application response.
 - GitHub Docs: [Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
   and [404 pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site).
-  Route entry generation is original project build logic and still needs live Pages verification.
+  Route entry generation is original project build logic; real Pages verification passed in Round 5.
 
 ## LLM usage
 
@@ -39,10 +39,12 @@ messages and assistant tool-call code/arguments, anonymizes paths and redacts
 credential patterns. Automatic environment/browser state, system/developer
 messages, internal reasoning, tool responses, webpage bodies and binary media
 are excluded. The header identifies the export/checkpoint time and source SHA-256.
-No public sharing or upload has been performed. Regenerate the actual record
-after Round 5, submit it with the source, and answer the course LLM survey;
-those final submission obligations remain pending. README does not require a
-specific CSV or hosted log platform.
+The actual checkpoint has been committed with the source to the public MP2
+repository. Final Round 5 evidence and the updated checkpoint are included in
+the release documentation update; regenerate the record if more MP2 work or
+submission-related conversation occurs. The owner must still answer the course
+LLM survey and submit the form. README does not require a particular CSV or
+separately hosted chat share.
 
 ## Dependency compatibility check
 
@@ -118,7 +120,8 @@ on Node 20.20.2; see ROUND1_ACCEPTANCE.md.
   files outside the submitted app. Browser-injected annotation overlays are also
   outside the app root; no project inline styling/script/table layout was added.
 - Full findings, limits and manual checks: [ROUND4_ACCEPTANCE.md](ROUND4_ACCEPTANCE.md).
-  Live Pages, native browser 200% zoom and final course submission are still pending.
+  This Round 4 checkpoint preceded Pages; Round 5 verifies real deployment and
+  the owner has confirmed Round 4 manual checks. Final course submission remains pending.
 
 
 ## Round 5 release references
@@ -132,6 +135,13 @@ on Node 20.20.2; see ROUND1_ACCEPTANCE.md.
   first-page fields and two-page structure were inspected read-only. Personal
   information, elapsed work hours and LLM survey responses are for the owner to
   supply; no form response or demo video was fabricated.
-- Commit/deployment checks, online browser QA and final checkpoint details will
-  be recorded in ROUND5_ACCEPTANCE.md. Submission steps and video script are
-  original project documents in SUBMISSION_CHECKLIST.md.
+- Application commit [6a5e218](https://github.com/Zane1ee/mp2/commit/6a5e218b462f6c9dfb9cf3ac856e2b9a8645f5d6)
+  and [successful Actions run](https://github.com/Zane1ee/mp2/actions/runs/37421031265):
+  real Node 20 CI build/deploy and current app deployment were verified. Pages
+  HTML and assets match the validated build; all valid routes, browser operations,
+  sample mode and narrow layout passed. Original app code and assets are unchanged
+  in the subsequent evidence/log update.
+- Full evidence is recorded in ROUND5_ACCEPTANCE.md and docs/qa/online-*.
+  Submission steps and video script are original project documents in
+  SUBMISSION_CHECKLIST.md. The owner still records/shares the actual video and
+  completes the survey/form; engineering completion is separate from submission.

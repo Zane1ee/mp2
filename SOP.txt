@@ -4,12 +4,14 @@ Project: CS409 MP2 - Front-end App
 Repo root: /Users/a16594/Desktop/uiuc FA26/cs 409/mp2/
 Draft date: 2026-10-05 (America/Chicago)
 Due: Tuesday, 2026-10-06, 11:59 PM CT（按当前 README）
-Status: ROUND 5 RELEASE IN PROGRESS (2026-10-06)。
-        D1-D7 已批准；第 1-4 轮用户手动验收通过，功能开发结束。
-        STEP 21/22 提交与真实 Pages 验收正在执行；仓库公开、现有推送权限、
-        Pages Source=GitHub Actions / HTTPS 已经 GitHub API 实际确认。
-        STEP 23/24 的视频、个人信息、survey 和表单由所有者按提交清单操作。
-        当前记录见 ROUND5_ACCEPTANCE.md；提交清单见 SUBMISSION_CHECKLIST.md。
+Status: CODE / TECHNICAL RELEASE COMPLETE (2026-10-06)。
+        D1-D7 已批准；第 1-4 轮用户手验通过；第 5 轮 STEP 21/22 发布验收通过。
+        应用提交 6a5e218 已推送，Actions build/deploy success，真实 Pages
+        全部有效入口、资源与三页交互通过；原 README/workflow/依赖未改。
+        实际日志随源码提交，最终证据/截止快照在本轮文档更新中整理。
+        STEP 23/24 的视频录制、Drive 定向共享、本人信息/用时、LLM survey
+        和课程表单提交仍待所有者，不把工程完成当作课程已提交。
+        发布与手验见 ROUND5_ACCEPTANCE.md；提交参考见 SUBMISSION_CHECKLIST.md。
 
 SOURCE-OF-TRUTH ORDER
 ---------------------
@@ -457,7 +459,7 @@ EXECUTION BATCHES — SENIOR ENGINEERING REVIEW (2026-10-05)
     证明：推荐视口、无 inline style/script/table、生产预览、检查清单。
     限制：线上与提交事项仍需阶段 F；本地通过不等于最终提交完成。
 
-  阶段 F / 后续第 5 批 — 部署、演示和提交（进行中；视频与表单待所有者）
+  阶段 F / 后续第 5 批 — 部署、演示和提交（技术发布已完成；视频/表单待所有者）
     STEP 21-24。
     成果：最终提交/推送、Actions/Pages、线上直达与刷新检查、<=3 分钟
           Drive 演示、可访问聊天记录、LLM survey、正确 mp2 表单。
@@ -723,8 +725,8 @@ LLM EXECUTION-SPECIFIC REQUIREMENTS
   README 未规定一定使用 CSV、某个日志平台或某个 MCP。llm_logs.csv 只是
   沿用 mp1 的推荐索引方式，不能仅提交一份无真实记录的 CSV。
 - 原规划轮只有规划；第 1-5 轮已使用 LLM 生成代码/交付文档，README 的日志和 survey
-  义务已触发。本地实际记录见 docs/llm/mp2-chatlog.md 与 llm_logs.csv；
-  导出有明确截止点，第 5 轮结束前再更新并随源码实际提交，survey 尚未填写。
+  义务已触发。实际记录见 docs/llm/mp2-chatlog.md 与 llm_logs.csv，已随源码
+  提交到公开仓库；导出有明确截止点，后续工作再更新，survey 尚未填写。
 - 一般 Rules 的个人作业、不得复制粘贴他人代码、声明所有参考来源对全部
   开发过程生效；它们是通用课程规则，不是隐藏的 LLM 专属任务。
 - 所有者原规划轮要求：先产出 SOP，再经确认进入开发；冲突以 README 为准；
@@ -890,6 +892,28 @@ ROUND 4 IMPLEMENTATION REVIEW / ACCEPTANCE (2026-10-05–06)
   未推送/部署/上传/提交，第 5 轮仍待授权执行。
 
 ------------------------------------------------
+ROUND 5 RELEASE REVIEW / ACCEPTANCE (2026-10-06)
+------------------------------------------------
+- 所有者确认第 4 轮手验通过并授权第 5 轮。应用开发结束，本轮没有增加功能、
+  更改依赖/课程 workflow/README 或新增个性化方案。
+- STEP 21 完成：实际源码、lockfile、来源、文档与真实聊天记录提交并推到 main；
+  采用该仓库原提交的 GitHub 作者/隐私邮箱，不把本机推测邮箱写入提交元数据。
+- STEP 22 完成：公开仓库、推送权限、Pages workflow/HTTPS 均实际确认；
+  应用提交 6a5e218 的 Actions 37421031265 build/deploy 及 deployment success。
+  根 +62有效入口200，资源/HTML/样例与本地验收构建一致；无效路径404应用页。
+- 真实线上 List 四种排序、两详情入口/属性/前后循环、图库7/6/13/23与去重、
+  新标签直达/硬刷新/历史/返回、样例单项禁用与刷新、390px三页/键盘通过。
+  正常控制台 warning/error 为空；应用 DOM 无内联样式、script 内容或 table。
+- 本轮发布前 Node 20.20.2 npm ci/lint/strict类型/41测试/build全部通过，
+  真实 Ubuntu/Node20 CI 的安装、构建和部署通过。可选 fsevents 提示记录在报告。
+- 线上证据位于 docs/qa/online-*；最终文档及日志检查点同 main 更新。
+- STEP 23/24 的准备已完成：SUBMISSION_CHECKLIST.md 列出应交内容、实际
+  MP2 表单首页字段、课程邮箱、截止时间、3分钟视频脚本、日志更新和确认清单。
+  仅只读查看表单，未代填本人信息/实际用时/LLM调查，也未录屏上传或提交。
+- 代码与技术发布已结束；课程提交尚未完成。当前可复现手验与证据见
+  ROUND5_ACCEPTANCE.md；后续由所有者完成视频/Drive权限/survey/提交确认。
+
+------------------------------------------------
 READING / SOURCE REGISTER FOR THIS PLANNING DRAFT
 ------------------------------------------------
 访问/核对日期：2026-10-05。已在 SOURCES.md 登记，并持续追加实际实现参考。
@@ -910,12 +934,12 @@ READING / SOURCE REGISTER FOR THIS PLANNING DRAFT
   不是这两份文档承诺的 React 自动 fallback。
 
 ------------------------------------------------
-DONE CRITERIA (all must be true；本地发布候选已验证，用户手验/部署/提交仍待执行)
+DONE CRITERIA (all must be true；代码/线上发布已验证，视频和课程最终提交仍待所有者)
 ------------------------------------------------
 [x] D1-D7 获批采用推荐方案（2026-10-05）
 [x] 所有者明确授权第 1 轮初始化/实现（2026-10-05）
 [x] react-ts 安全初始化，原 README/workflow 保留，lockfile 已生成
-[ ] lockfile 随源码实际提交到仓库
+[x] lockfile 随源码实际提交到公开 main（第 5 轮）
 [x] React + TypeScript + React Router + Axios 实际使用且构建通过
 [x] List 展示所选 API 相关对象（4；第 2 轮）
 [x] 搜索 as-you-type，清空/空白/大小写/无匹配行为正确（8；第 2 轮）
@@ -924,14 +948,15 @@ DONE CRITERIA (all must be true；本地发布候选已验证，用户手验/部
 [x] List 点击去详情（10），Gallery 点击去同一详情（10；第 2-3 轮）
 [x] 详情属性与选中对象对应（8；第 3 轮）
 [x] Previous/Next 按批准集合/顺序与边界语义正确（10；第 2-3 轮）
-[ ] 详情有专属 route，线上特定 URL 直达/刷新可用
+[x] 详情有专属 route，线上特定 URL 直达/刷新可用（第 5 轮）
 [x] 三个 view 设计一致、推荐屏幕/键盘本地可操作（Design 10；第 4 轮）
 [x] 第 4 轮用户手验通过，包括手验清单中的原生 200% 缩放（所有者确认无问题）
 [x] 加载/空/错误/重试/缺图/快速切换可控，无目录范围误导（第 2-4 轮）
 [x] 当前生产 app 无 inline styling、inline script tags、table layout 或付费 API
 [x] 当前参考来源与媒体已申报，本地实际 LLM 截止记录已准备（第 4 轮）
-[ ] 最终 LLM 记录已更新、随源码提交，并完成课程 survey
+[x] 本轮实际 LLM 截止记录已更新并随源码提交；后续对话如继续须补充记录
+[ ] 课程 LLM survey 由所有者完成
 [x] clean install、lint、strict 类型检查、41测试、build 与本地最终 README review 通过（第 4 轮）
-[ ] GitHub Actions 部署 green，线上功能/资源/深链接通过
+[x] GitHub Actions 应用发布 green，线上功能/资源/全部有效深链接通过（第 5 轮）
 [ ] <=3 分钟视频覆盖要求并共享给课程邮箱
 [ ] 正确 mp2 表单提交成功且在 README 截止时间前完成

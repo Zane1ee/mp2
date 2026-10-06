@@ -1,0 +1,168 @@
+{
+  "sorts": [
+    {
+      "sort": "id",
+      "order": "asc",
+      "actual": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "sort": "id",
+      "order": "desc",
+      "actual": [
+        6,
+        5,
+        4
+      ]
+    },
+    {
+      "sort": "name",
+      "order": "asc",
+      "actual": [
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "sort": "name",
+      "order": "desc",
+      "actual": [
+        5,
+        4,
+        6
+      ]
+    }
+  ],
+  "listDetail": {
+    "fields": [
+      "1.7 m",
+      "90.5 kg",
+      "Blaze, Solar Power",
+      "78",
+      "84",
+      "78",
+      "109",
+      "85",
+      "100"
+    ],
+    "focus": "detail-title",
+    "imageLoaded": true,
+    "title": "Charizard | Pokémon Explorer"
+  },
+  "listCycleAndHistory": {
+    "passed": true,
+    "returnedUrl": "https://zane1ee.github.io/mp2/list/?q=char&sort=name&order=asc"
+  },
+  "gallery": {
+    "fire": 7,
+    "water": 6,
+    "fireOrWater": 13,
+    "grassOrPoison": 23,
+    "bulbasaurCards": 1
+  },
+  "galleryDetailUrl": "https://zane1ee.github.io/mp2/pokemon/60/?from=gallery&type=fire&type=water",
+  "deepLink": {
+    "newTab": true,
+    "hardRefresh": true,
+    "wrapped": true,
+    "returnedUrl": "https://zane1ee.github.io/mp2/gallery/?type=fire&type=water"
+  },
+  "sample": {
+    "url": "https://zane1ee.github.io/mp2/pokemon/25/?from=gallery&type=electric&mode=sample",
+    "previousEnabled": false,
+    "nextEnabled": false
+  },
+  "mobile": {
+    "detail": {
+      "focus": "detail-title",
+      "scrollWidth": 390,
+      "width": 390
+    },
+    "gallery": {
+      "scrollWidth": 390,
+      "width": 390
+    },
+    "list": {
+      "focus": "pokemon-search",
+      "scrollWidth": 390,
+      "width": 390
+    }
+  },
+  "unknown": {
+    "focus": "H1",
+    "h1Count": 1,
+    "title": "Page not found | Pokémon Explorer"
+  },
+  "productionDOM": {
+    "assets": [
+      "/mp2/assets/index-DfFuJ1Q0.js",
+      "/mp2/assets/index-B2glWkbq.css"
+    ],
+    "images": [
+      {
+        "alt": "Charmander",
+        "loaded": true
+      },
+      {
+        "alt": "Charmeleon",
+        "loaded": true
+      },
+      {
+        "alt": "Charizard",
+        "loaded": true
+      },
+      {
+        "alt": "Squirtle",
+        "loaded": true
+      },
+      {
+        "alt": "Wartortle",
+        "loaded": true
+      },
+      {
+        "alt": "Blastoise",
+        "loaded": true
+      },
+      {
+        "alt": "Vulpix",
+        "loaded": true
+      },
+      {
+        "alt": "Ninetales",
+        "loaded": true
+      },
+      {
+        "alt": "Psyduck",
+        "loaded": true
+      },
+      {
+        "alt": "Golduck",
+        "loaded": true
+      },
+      {
+        "alt": "Growlithe",
+        "loaded": true
+      },
+      {
+        "alt": "Arcanine",
+        "loaded": true
+      },
+      {
+        "alt": "Poliwag",
+        "loaded": true
+      }
+    ],
+    "inlineScripts": 0,
+    "inlineStyles": 0,
+    "scrollWidth": 1280,
+    "tables": 0,
+    "width": 1280
+  },
+  "normalConsole": [],
+  "site": "https://zane1ee.github.io/mp2/",
+  "applicationCommit": "6a5e218b462f6c9dfb9cf3ac856e2b9a8645f5d6"
+}
